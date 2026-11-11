@@ -1,11 +1,11 @@
-# MediQue
+# ClinicBook
 OJT project
 
-# 🏥 MediQue — Smart Healthcare Appointment Booking
+# 🏥 ClinicBook — Smart Healthcare Appointment Booking
 
 **Healthcare, made simpler.**
 
-MediQue is a web-based healthcare appointment booking platform designed to simplify the process of finding doctors and scheduling medical appointments.
+ClinicBook is a web-based healthcare appointment booking platform designed to simplify the process of finding doctors and scheduling medical appointments.
 
 The goal is to reduce the hassle of traditional phone-based appointment booking by providing a simple digital platform for patients, doctors and receptionists.
 
@@ -15,7 +15,7 @@ The goal is to reduce the hassle of traditional phone-based appointment booking 
 
 Booking doctor appointments often involves calling clinics, waiting for receptionist responses and manually checking doctor availability.
 
-MediQue aims to make this process easier by bringing appointment booking and clinic management into one platform.
+ClinicBook aims to make this process easier by bringing appointment booking and clinic management into one platform.
 
 ## ✨ Key Features
 
@@ -53,13 +53,10 @@ MediQue aims to make this process easier by bringing appointment booking and cli
 | JavaScript   | Interactive functionality   |
 | LocalStorage | Demo data storage (planned) |
 
-## 🎨 Design
-
-MediQue uses a calm blue and lavender colour palette to create a clean, simple and accessible healthcare interface.
 
 ## 📂 Project Structure
 
-```text
+```tex
 MediQue/
 │
 ├── index.html
@@ -87,17 +84,7 @@ MediQue/
 * Secure medical record management.
 * Multi-clinic support.
 
-## ⚠️ Disclaimer
 
-MediQue is a student project and an early-stage prototype.
-
-It uses demonstration data and is not intended for real patient bookings, medical record storage or clinical use.
-
-## 👩‍💻 Author
-
-**Vijaya Lakshmee**
-
-GitHub: [@vijayalakshmeeidk-coder](https://github.com/vijayalakshmeeidk-coder)
 
 ---
 
