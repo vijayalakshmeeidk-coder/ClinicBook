@@ -5,7 +5,7 @@ const doctors = [
         specialty: "Cardiologist",
         hospital: "City Care Hospital",
         location: "Bangalore",
-        experience: "10 years",
+        experience: "5 years",
         fee: 700
     },
     {
