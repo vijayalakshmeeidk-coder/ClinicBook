@@ -3,82 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ClinicBook | Healthcare Made Simpler</title>
+    <title>ClinicBook | Appointment Booking</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <nav class="navbar shadow-sm">
-        <div class="container">
-            <a href="index.html" class="brand">ClinicBook.</a>
-            <span class="text-secondary">Healthcare, made simpler.</span>
-        </div>
-    </nav>
+<div class="page-glow"></div>
 
-    <section class="hero">
-        <div class="container">
+<div class="login-wrap">
 
-            <h1>Your Health, Our Priority.</h1>
+    <a href="index.html" class="brand brand-large">
+        Clinic<span>Book</span>
+    </a>
 
-            <p>
-                Find trusted doctors, explore available appointments
-                and manage your healthcare journey in one place.
-            </p>
+    <div class="login-card">
 
-            <h4 class="mt-5 mb-4">How would you like to continue?</h4>
+        <div class="eyebrow">WELCOME TO CLINICBOOK</div>
 
-            <div class="row g-4 justify-content-center">
+        <h1>Healthcare, made simpler.</h1>
 
-                <div class="col-md-4">
-                    <div class="card-custom role-card">
-                        <div class="role-icon">🧑‍⚕️</div>
-                        <h3 class="mt-3">Patient</h3>
-                        <p class="text-secondary">
-                            Find doctors and book appointments.
-                        </p>
-                        <a href="patient-dashboard.html" class="btn btn-main">
-                            Continue as Patient
-                        </a>
-                    </div>
-                </div>
+        <p class="muted-copy mb-4">
+            Book appointments, manage schedules and make your clinic visits easier.
+        </p>
 
-                <div class="col-md-4">
-                    <div class="card-custom role-card">
-                        <div class="role-icon">👨‍⚕️</div>
-                        <h3 class="mt-3">Doctor</h3>
-                        <p class="text-secondary">
-                            View appointments and manage your schedule.
-                        </p>
-                        <a href="doctor-dashboard.html" class="btn btn-main">
-                            Continue as Doctor
-                        </a>
-                    </div>
-                </div>
+        <h2 class="mb-3">Continue as</h2>
 
-                <div class="col-md-4">
-                    <div class="card-custom role-card">
-                        <div class="role-icon">🏥</div>
-                        <h3 class="mt-3">Receptionist</h3>
-                        <p class="text-secondary">
-                            View and manage clinic appointments.
-                        </p>
-                        <a href="receptionist-dashboard.html" class="btn btn-main">
-                            Continue as Receptionist
-                        </a>
-                    </div>
-                </div>
-
+        <div class="role-option">
+            <div>
+                <h3>Patient</h3>
+                <p class="muted-copy">Find doctors and book appointments.</p>
             </div>
+            <a href="patient-dashboard.html" class="btn btn-primary-soft">Continue</a>
         </div>
-    </section>
 
-    <footer>
-        © 2026 ClinicBook. Healthcare, made simpler.
-    </footer>
+        <div class="role-option">
+            <div>
+                <h3>Doctor</h3>
+                <p class="muted-copy">View appointments and manage patients.</p>
+            </div>
+            <a href="doctor-dashboard.html" class="btn btn-primary-soft">Continue</a>
+        </div>
+
+        <div class="role-option">
+            <div>
+                <h3>Receptionist</h3>
+                <p class="muted-copy">Manage clinic appointments.</p>
+            </div>
+            <a href="receptionist-dashboard.html" class="btn btn-primary-soft">Continue</a>
+        </div>
+
+    </div>
+
+    <p class="login-side-note">A simpler way to manage healthcare appointments.</p>
+
+</div>
 
 </body>
 </html>
