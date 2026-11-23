@@ -32,6 +32,40 @@
             <p class="muted-copy">Manage your patient appointments.</p>
         </div>
 
+        <main>
+            <section class="panel-section">
+  <div class="section-heading">
+    <div>
+      <h2>Doctor Profile</h2>
+      <p class="muted-copy">Select your doctor account to view your schedule.</p>
+    </div>
+  </div>
+  <div class="profile-card">
+    <div class="profile-item">
+      <span>Doctor</span>
+      <strong id="doctorProfileName">Not selected</strong>
+    </div>
+    <div class="profile-item">
+      <span>Specialty</span>
+      <strong id="doctorProfileSpecialty">Not selected</strong>
+    </div>
+    <div class="profile-item">
+      <span>Hospital</span>
+      <strong id="doctorProfileHospital">Not selected</strong>
+    </div>
+  </div>
+  <form class="inline-form mt-3" onsubmit="saveDoctorLogin(event)">
+    <label>
+      Select Doctor Account
+      <select id="doctorLoginSelect" class="form-select form-control-soft" required>
+        <option value="">Choose a doctor</option>
+      </select>
+    </label>
+    <button type="submit" class="btn btn-primary-soft">Save / Switch Doctor</button>
+  </form>
+</section>
+        </main>
+
         <!-- <div class="heading-mark">CB</div> -->
     </div>
 
