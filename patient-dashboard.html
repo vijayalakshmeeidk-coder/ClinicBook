@@ -3,136 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard | MediQue</title>
+
+    <title>Patient Dashboard | ClinicBook</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #EFF6FF;
-            color: #334155;
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar {
-            background: white;
-        }
-
-        .brand {
-            color: #4F46A5;
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .welcome {
-            background: #4F46A5;
-            color: white;
-            padding: 40px;
-            border-radius: 18px;
-        }
-
-        .dashboard-card {
-            background: white;
-            padding: 28px;
-            border-radius: 16px;
-            height: 100%;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        }
-
-        .icon {
-            font-size: 38px;
-        }
-
-        .btn-main {
-            background: #4F46A5;
-            color: white;
-            border-radius: 9px;
-        }
-
-        .btn-main:hover {
-            background: #3730A3;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <nav class="navbar shadow-sm">
         <div class="container">
-            <a class="navbar-brand brand" href="index.html">MediQue.</a>
-            <a href="index.html" class="btn btn-outline-secondary">Logout</a>
+            <a href="index.html" class="brand">ClinicBook.</a>
+            <a href="index.html" class="btn btn-soft">Logout</a>
         </div>
     </nav>
 
-    <div class="container py-5">
+    <main class="container-main">
 
-        <section class="welcome mb-5">
-            <h1>Welcome, Patient! 👋</h1>
-            <p class="mb-0">
-                Take control of your healthcare journey.
-                Find doctors and manage your appointments in one place.
-            </p>
+        <section class="welcome">
+            <h1 id="patientWelcome">Welcome, Patient!</h1>
+            <p class="mb-0">Your healthcare journey starts here.</p>
         </section>
 
-        <h3 class="mb-4">Your Dashboard</h3>
-
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="dashboard-card">
-                    <div class="icon">🔍</div>
-                    <h4 class="mt-3">Find Doctors</h4>
-                    <p class="text-secondary">
-                        Browse doctors and explore their specialities.
-                    </p>
-                    <a href="doctor-directory.html" class="btn btn-main">
-                        Explore Doctors
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="dashboard-card">
-                    <div class="icon">📅</div>
-                    <h4 class="mt-3">My Appointments</h4>
-                    <p class="text-secondary">
-                        Keep track of your upcoming and previous visits.
-                    </p>
-                    <a href="my-appointments.html" class="btn btn-main">
-                        View Appointments
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="dashboard-card">
-                    <div class="icon">📁</div>
-                    <h4 class="mt-3">Medical Records</h4>
-                    <p class="text-secondary">
-                        View your demo medical records and sharing preferences.
-                    </p>
-                    <a href="medical-records.html" class="btn btn-main">
-                        View Records
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-5 p-4 bg-white rounded-4">
-            <h4>Quick Reminder 💙</h4>
-            <p class="text-secondary mb-0">
-                Your health matters. Remember to keep track of your appointments!
+        <section class="card-custom mb-4">
+            <h3>Personal Details</h3>
+            <p class="text-secondary">
+                Enter your details to make appointment booking easier.
             </p>
-        </div>
 
-    </div>
+            <form onsubmit="event.preventDefault(); savePatientDetails();">
 
-    <footer class="text-center py-4 text-secondary">
-        © 2026 MediQue | Student Project Prototype
-    </footer>
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="patientName" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" id="patientPhone" class="form-control"
+                            pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="patientEmail" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Age</label>
+                        <input type="number" id="patientAge" class="form-control"
+                            min="1" max="120" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Gender</label>
+                        <select id="patientGender" class="form-select" required>
+                            <option value="">Select</option>
+                            <option>Female</option>
+                            <option>Male</option>
+                            <option>Other</option>
+                            <option>Prefer not to say</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-main mt-4" type="submit">
+                    Save Details
+                </button>
+
+            </form>
+        </section>
+
+        <section>
+            <h2 class="section-title">Find Your Doctor</h2>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6">
+                    <input type="text" id="doctorSearch"
+                        class="form-control"
+                        placeholder="Search doctor, hospital or specialty"
+                        oninput="renderDoctors()">
+                </div>
+
+                <div class="col-md-6">
+                    <select id="specialtyFilter"
+                        class="form-select"
+                        onchange="renderDoctors()">
+
+                        <option value="All">All Specialties</option>
+                        <option>Cardiologist</option>
+                        <option>Dermatologist</option>
+                        <option>Dentist</option>
+                        <option>General Physician</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row g-4" id="doctorList"></div>
+        </section>
+
+        <section id="bookingSection" class="card-custom mt-5">
+
+            <h2>Book an Appointment</h2>
+            <p class="text-secondary">
+                Select your doctor, date and available time slot.
+            </p>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Choose Doctor</label>
+
+                    <select id="doctorSelect" class="form-select"
+                        onchange="renderSlots()">
+
+                        <option value="">Select a doctor</option>
+
+                        <option value="1">Dr. Sharma - Cardiologist</option>
+                        <option value="2">Dr. Mehta - Dermatologist</option>
+                        <option value="3">Dr. Kapoor - Dentist</option>
+                        <option value="4">Dr. Rao - General Physician</option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Appointment Date</label>
+
+                    <input type="date" id="appointmentDate"
+                        class="form-control"
+                        onchange="renderSlots()">
+                </div>
+
+            </div>
+
+            <h5 class="mt-4">Available Time Slots</h5>
+
+            <div id="slotList" class="my-3">
+                <p class="text-secondary">
+                    Select a doctor and date first.
+                </p>
+            </div>
+
+            <input type="hidden" id="selectedSlot">
+
+            <button class="btn btn-main mt-3" onclick="bookAppointment()">
+                Confirm Appointment
+            </button>
+
+        </section>
+
+        <section class="mt-5">
+
+            <h2 class="section-title">My Appointments</h2>
+
+            <div class="card-custom">
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Specialty</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="patientAppointments"></tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>© 2026 ClinicBook.</footer>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
