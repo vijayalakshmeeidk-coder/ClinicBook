@@ -4,8 +4,7 @@ const doctors = [
         name: "Dr. Sharma",
         specialty: "Cardiologist",
         hospital: "City Care Hospital",
-        location: "Bangalore",
-        experience: "10 years",
+        experience: 10,
         fee: 700
     },
     {
@@ -13,8 +12,7 @@ const doctors = [
         name: "Dr. Mehta",
         specialty: "Dermatologist",
         hospital: "Sunrise Clinic",
-        location: "Bangalore",
-        experience: "8 years",
+        experience: 8,
         fee: 500
     },
     {
@@ -22,8 +20,7 @@ const doctors = [
         name: "Dr. Kapoor",
         specialty: "Dentist",
         hospital: "Smile Dental Centre",
-        location: "Bangalore",
-        experience: "6 years",
+        experience: 6,
         fee: 400
     },
     {
@@ -31,13 +28,12 @@ const doctors = [
         name: "Dr. Rao",
         specialty: "General Physician",
         hospital: "City Care Hospital",
-        location: "Bangalore",
-        experience: "12 years",
+        experience: 12,
         fee: 600
     }
 ];
 
-const slots = [
+const timeSlots = [
     "09:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -56,200 +52,245 @@ function saveAppointments(appointments) {
 }
 
 function getPatient() {
-    return JSON.parse(localStorage.getItem("clinicPatient")) || {};
-}
-
-function savePatient(patient) {
-    localStorage.setItem("clinicPatient", JSON.stringify(patient));
-}
-
-function showMessage(message) {
-    alert(message);
+    return JSON.parse(localStorage.getItem("clinicPatient")) || null;
 }
 
 function getDoctor(id) {
     return doctors.find(doctor => doctor.id === Number(id));
 }
 
-function getStatusClass(status) {
-    if (status === "Completed") return "status-completed";
-    if (status === "Cancelled") return "status-cancelled";
-    return "status-booked";
+function showMessage(message) {
+    alert(message);
 }
 
-/* PATIENT PAGE */
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+function getStatusClass(status) {
+    return "status-" + status.toLowerCase();
+}
+
+function getToday() {
+    const date = new Date();
+    const offset = date.getTimezoneOffset();
+    return new Date(date.getTime() - offset * 60000)
+        .toISOString()
+        .split("T")[0];
+}
+
+/* PATIENT DETAILS */
 
 function loadPatientPage() {
     const patient = getPatient();
 
-    const nameInput = document.getElementById("patientName");
-    const phoneInput = document.getElementById("patientPhone");
-    const emailInput = document.getElementById("patientEmail");
-    const ageInput = document.getElementById("patientAge");
-    const genderInput = document.getElementById("patientGender");
+    if (patient) {
+        document.getElementById("patientWelcome").textContent =
+            "Welcome, " + patient.name;
 
-    if (patient.name) nameInput.value = patient.name;
-    if (patient.phone) phoneInput.value = patient.phone;
-    if (patient.email) emailInput.value = patient.email;
-    if (patient.age) ageInput.value = patient.age;
-    if (patient.gender) genderInput.value = patient.gender;
+        document.getElementById("patientName").textContent = patient.name;
+        document.getElementById("patientPhone").textContent = patient.phone;
+        document.getElementById("patientEmail").textContent = patient.email;
+        document.getElementById("patientAge").textContent = patient.age;
+        document.getElementById("patientGender").textContent = patient.gender;
 
-    document.getElementById("patientWelcome").textContent =
-        patient.name ? "Welcome, " + patient.name + "!" : "Welcome, Patient!";
+        document.getElementById("nameInput").value = patient.name;
+        document.getElementById("phoneInput").value = patient.phone;
+        document.getElementById("emailInput").value = patient.email;
+        document.getElementById("ageInput").value = patient.age;
+        document.getElementById("genderInput").value = patient.gender;
+    }
+
+    document.getElementById("appointmentDate").min = getToday();
 
     renderDoctors();
     renderPatientAppointments();
 }
 
-function savePatientDetails() {
+function savePatientDetails(event) {
+    event.preventDefault();
+
     const patient = {
-        name: document.getElementById("patientName").value.trim(),
-        phone: document.getElementById("patientPhone").value.trim(),
-        email: document.getElementById("patientEmail").value.trim(),
-        age: document.getElementById("patientAge").value,
-        gender: document.getElementById("patientGender").value
+        name: document.getElementById("nameInput").value.trim(),
+        phone: document.getElementById("phoneInput").value.trim(),
+        email: document.getElementById("emailInput").value.trim(),
+        age: document.getElementById("ageInput").value,
+        gender: document.getElementById("genderInput").value
     };
 
     if (!patient.name || !patient.phone || !patient.email ||
         !patient.age || !patient.gender) {
-        showMessage("Please fill in all your details.");
-        return false;
+        showMessage("Please complete all patient details.");
+        return;
     }
 
-    savePatient(patient);
-    document.getElementById("patientWelcome").textContent =
-        "Welcome, " + patient.name + "!";
+    localStorage.setItem("clinicPatient", JSON.stringify(patient));
 
-    showMessage("Your details have been saved.");
-    return true;
+    loadPatientPage();
+
+    showMessage("Patient details saved successfully.");
 }
 
-function renderDoctors() {
-    const container = document.getElementById("doctorList");
-    if (!container) return;
+/* DOCTOR LIST */
 
-    const search = document.getElementById("doctorSearch").value.toLowerCase();
+function renderDoctors() {
+    const search = document.getElementById("doctorSearch")
+        .value.toLowerCase();
+
     const specialty = document.getElementById("specialtyFilter").value;
 
     const filteredDoctors = doctors.filter(doctor => {
         const matchesSearch =
             doctor.name.toLowerCase().includes(search) ||
-            doctor.hospital.toLowerCase().includes(search) ||
-            doctor.specialty.toLowerCase().includes(search);
+            doctor.specialty.toLowerCase().includes(search) ||
+            doctor.hospital.toLowerCase().includes(search);
 
         const matchesSpecialty =
-            specialty === "All" || doctor.specialty === specialty;
+            specialty === "" || doctor.specialty === specialty;
 
         return matchesSearch && matchesSpecialty;
     });
 
-    container.innerHTML = "";
+    const doctorList = document.getElementById("doctorList");
 
     if (filteredDoctors.length === 0) {
-        container.innerHTML = '<p class="empty-message">No doctors found.</p>';
+        doctorList.innerHTML =
+            '<div class="empty-state">No doctors found.</div>';
         return;
     }
 
-    filteredDoctors.forEach(doctor => {
-        container.innerHTML += `
-            <div class="col-md-6 col-lg-4">
-                <div class="doctor-card">
-                    <div class="doctor-icon">🩺</div>
-                    <h4 class="mt-2">${doctor.name}</h4>
-                    <p class="mb-1">${doctor.specialty}</p>
-                    <p class="text-secondary mb-1">${doctor.hospital}</p>
-                    <p class="text-secondary mb-1">${doctor.location}</p>
-                    <p class="text-secondary">Experience: ${doctor.experience}</p>
-                    <p><strong>Consultation fee: ₹${doctor.fee}</strong></p>
-                    <button class="btn btn-main w-100"
-                        onclick="selectDoctor(${doctor.id})">
-                        Book Appointment
-                    </button>
-                </div>
+    doctorList.innerHTML = filteredDoctors.map(doctor => `
+        <div class="doctor-card">
+
+            <div class="doctor-avatar">
+                ${escapeHTML(doctor.name.charAt(0))}
             </div>
-        `;
-    });
+
+            <h3>${escapeHTML(doctor.name)}</h3>
+
+            <div class="doctor-specialty">
+                ${escapeHTML(doctor.specialty)}
+            </div>
+
+            <div class="doctor-meta">
+                ${escapeHTML(doctor.hospital)}
+            </div>
+
+            <div class="doctor-meta">
+                ${doctor.experience} years of experience
+            </div>
+
+            <div class="doctor-meta">
+                Consultation Fee: ₹${doctor.fee}
+            </div>
+
+            <button class="btn btn-primary-soft"
+                onclick="selectDoctor(${doctor.id})">
+                Book Appointment
+            </button>
+
+        </div>
+    `).join("");
 }
+
+/* SELECT DOCTOR */
 
 function selectDoctor(id) {
     document.getElementById("doctorSelect").value = id;
+
+    document.getElementById("selectedSlot").value = "";
+
+    renderSlots();
+
     document.getElementById("bookingSection").scrollIntoView({
         behavior: "smooth"
     });
-    renderSlots();
 }
+
+/* AVAILABLE SLOTS */
 
 function renderSlots() {
     const doctorId = document.getElementById("doctorSelect").value;
     const date = document.getElementById("appointmentDate").value;
-    const container = document.getElementById("slotList");
 
-    container.innerHTML = "";
+    const slotList = document.getElementById("slotList");
+
+    document.getElementById("selectedSlot").value = "";
 
     if (!doctorId || !date) {
-        container.innerHTML = '<p class="text-secondary">Select a doctor and date first.</p>';
+        slotList.innerHTML =
+            '<p class="muted-copy">Select a doctor and date to view available slots.</p>';
+        return;
+    }
+
+    if (date < getToday()) {
+        slotList.innerHTML =
+            '<div class="empty-state">Please select today or a future date.</div>';
         return;
     }
 
     const appointments = getAppointments();
 
-    slots.forEach(slot => {
+    slotList.innerHTML = timeSlots.map(slot => {
+
         const alreadyBooked = appointments.some(appointment =>
-            appointment.doctorId === Number(doctorId) &&
+            Number(appointment.doctorId) === Number(doctorId) &&
             appointment.date === date &&
-            appointment.slot === slot &&
+            appointment.time === slot &&
             appointment.status !== "Cancelled"
         );
 
-        container.innerHTML += `
-            <button type="button"
-                class="btn ${alreadyBooked ? "btn-secondary" : "btn-soft"} m-1"
+        return `
+            <button
+                class="slot-button"
                 ${alreadyBooked ? "disabled" : ""}
-                onclick="chooseSlot('${slot}', this)">
-                ${slot} ${alreadyBooked ? "(Booked)" : ""}
+                onclick="chooseSlot(this, '${slot}')">
+
+                ${slot}
+                ${alreadyBooked ? "(Booked)" : ""}
+
             </button>
         `;
-    });
 
-    document.getElementById("selectedSlot").value = "";
+    }).join("");
 }
 
-function chooseSlot(slot, button) {
+function chooseSlot(button, slot) {
+    document.querySelectorAll(".slot-button").forEach(item => {
+        item.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
     document.getElementById("selectedSlot").value = slot;
-
-    document.querySelectorAll("#slotList button").forEach(btn => {
-        btn.classList.remove("btn-main");
-        btn.classList.add("btn-soft");
-    });
-
-    button.classList.remove("btn-soft");
-    button.classList.add("btn-main");
 }
+
+/* BOOK APPOINTMENT */
 
 function bookAppointment() {
     const patient = getPatient();
 
-    if (!patient.name) {
+    if (!patient) {
         showMessage("Please save your patient details first.");
         return;
     }
 
-    const doctorId = Number(document.getElementById("doctorSelect").value);
+    const doctorId = document.getElementById("doctorSelect").value;
     const date = document.getElementById("appointmentDate").value;
-    const slot = document.getElementById("selectedSlot").value;
+    const time = document.getElementById("selectedSlot").value;
 
-    const doctor = getDoctor(doctorId);
-
-    if (!doctor || !date || !slot) {
+    if (!doctorId || !date || !time) {
         showMessage("Please select a doctor, date and time slot.");
         return;
     }
 
-    const selectedDate = new Date(date + "T00:00:00");
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (selectedDate < today) {
+    if (date < getToday()) {
         showMessage("Please select today or a future date.");
         return;
     }
@@ -257,19 +298,21 @@ function bookAppointment() {
     const appointments = getAppointments();
 
     const alreadyBooked = appointments.some(appointment =>
-        appointment.doctorId === doctorId &&
+        Number(appointment.doctorId) === Number(doctorId) &&
         appointment.date === date &&
-        appointment.slot === slot &&
+        appointment.time === time &&
         appointment.status !== "Cancelled"
     );
 
     if (alreadyBooked) {
-        showMessage("Sorry, this slot has already been booked.");
+        showMessage("This slot has already been booked.");
         renderSlots();
         return;
     }
 
-    const appointment = {
+    const doctor = getDoctor(doctorId);
+
+    const newAppointment = {
         id: Date.now(),
         patientName: patient.name,
         patientPhone: patient.phone,
@@ -281,193 +324,273 @@ function bookAppointment() {
         specialty: doctor.specialty,
         hospital: doctor.hospital,
         date: date,
-        slot: slot,
+        time: time,
         fee: doctor.fee,
         status: "Booked"
     };
 
-    appointments.push(appointment);
+    appointments.push(newAppointment);
+
     saveAppointments(appointments);
 
-    showMessage("Your appointment has been booked successfully!");
-
     document.getElementById("selectedSlot").value = "";
+
     renderSlots();
     renderPatientAppointments();
+
+    showMessage("Appointment booked successfully!");
 }
 
-function renderPatientAppointments() {
-    const container = document.getElementById("patientAppointments");
-    if (!container) return;
+/* PATIENT APPOINTMENTS */
 
+function renderPatientAppointments() {
     const patient = getPatient();
+    const table = document.getElementById("patientAppointments");
+
+    if (!patient) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center muted-copy">
+                    Save your patient details to view appointments.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
     const appointments = getAppointments().filter(appointment =>
         appointment.patientPhone === patient.phone
     );
 
-    container.innerHTML = "";
-
     if (appointments.length === 0) {
-        container.innerHTML = '<p class="empty-message">You have no appointments yet.</p>';
-        return;
-    }
-
-    appointments.forEach(appointment => {
-        container.innerHTML += `
+        table.innerHTML = `
             <tr>
-                <td>${appointment.doctorName}</td>
-                <td>${appointment.specialty}</td>
-                <td>${appointment.date}</td>
-                <td>${appointment.slot}</td>
-                <td>
-                    <span class="status ${getStatusClass(appointment.status)}">
-                        ${appointment.status}
-                    </span>
-                </td>
-                <td>
-                    ${appointment.status === "Booked" ?
-                        `<button class="btn btn-sm btn-outline-danger"
-                            onclick="cancelAppointment(${appointment.id})">
-                            Cancel
-                        </button>` : ""}
+                <td colspan="6" class="text-center muted-copy">
+                    No appointments booked yet.
                 </td>
             </tr>
         `;
-    });
+        return;
+    }
+
+    table.innerHTML = appointments.map(appointment => `
+        <tr>
+
+            <td>${escapeHTML(appointment.doctorName)}</td>
+
+            <td>${escapeHTML(appointment.specialty)}</td>
+
+            <td>${escapeHTML(appointment.date)}</td>
+
+            <td>${escapeHTML(appointment.time)}</td>
+
+            <td>
+                <span class="status ${getStatusClass(appointment.status)}">
+                    ${escapeHTML(appointment.status)}
+                </span>
+            </td>
+
+            <td>
+                ${appointment.status === "Booked" ? `
+                    <button class="btn-table danger"
+                        onclick="cancelAppointment(${appointment.id})">
+                        Cancel
+                    </button>
+                ` : "-"}
+            </td>
+
+        </tr>
+    `).join("");
 }
 
 function cancelAppointment(id) {
+    if (!confirm("Are you sure you want to cancel this appointment?")) {
+        return;
+    }
+
     const appointments = getAppointments();
-    const appointment = appointments.find(item => item.id === id);
 
-    if (!appointment || appointment.status !== "Booked") return;
+    const updatedAppointments = appointments.map(appointment => {
+        if (appointment.id === id) {
+            appointment.status = "Cancelled";
+        }
 
-    appointment.status = "Cancelled";
-    saveAppointments(appointments);
+        return appointment;
+    });
 
-    showMessage("Appointment cancelled.");
+    saveAppointments(updatedAppointments);
+
     renderPatientAppointments();
     renderSlots();
+
+    showMessage("Appointment cancelled.");
 }
 
-/* DOCTOR PAGE */
+/* DOCTOR DASHBOARD */
 
 function loadDoctorPage() {
-    const dateElement = document.getElementById("todayDate");
-
-    if (dateElement) {
-        dateElement.textContent = new Date().toDateString();
-    }
+    document.getElementById("todayDate").textContent = getToday();
 
     renderDoctorAppointments();
 }
 
 function renderDoctorAppointments() {
-    const container = document.getElementById("doctorAppointments");
-    if (!container) return;
-
     const appointments = getAppointments();
-    const active = appointments.filter(item => item.status !== "Cancelled");
-    const booked = appointments.filter(item => item.status === "Booked");
-    const completed = appointments.filter(item => item.status === "Completed");
 
-    document.getElementById("totalAppointments").textContent = active.length;
-    document.getElementById("bookedAppointments").textContent = booked.length;
-    document.getElementById("completedAppointments").textContent = completed.length;
+    const booked = appointments.filter(a => a.status === "Booked").length;
+    const completed = appointments.filter(a => a.status === "Completed").length;
 
-    container.innerHTML = "";
+    document.getElementById("totalAppointments").textContent =
+        appointments.length;
+
+    document.getElementById("bookedAppointments").textContent = booked;
+
+    document.getElementById("completedAppointments").textContent = completed;
+
+    const table = document.getElementById("doctorAppointments");
 
     if (appointments.length === 0) {
-        container.innerHTML = '<tr><td colspan="7" class="empty-message">No appointments found.</td></tr>';
-        return;
-    }
-
-    appointments.forEach(appointment => {
-        container.innerHTML += `
+        table.innerHTML = `
             <tr>
-                <td>${appointment.patientName}</td>
-                <td>${appointment.patientPhone}</td>
-                <td>${appointment.doctorName}</td>
-                <td>${appointment.date}</td>
-                <td>${appointment.slot}</td>
-                <td>
-                    <span class="status ${getStatusClass(appointment.status)}">
-                        ${appointment.status}
-                    </span>
-                </td>
-                <td>
-                    ${appointment.status === "Booked" ?
-                        `<button class="btn btn-sm btn-main"
-                            onclick="completeAppointment(${appointment.id})">
-                            Complete
-                        </button>` : ""}
+                <td colspan="8" class="text-center muted-copy">
+                    No appointments available.
                 </td>
             </tr>
         `;
-    });
+        return;
+    }
+
+    table.innerHTML = appointments.map(appointment => `
+        <tr>
+
+            <td>${escapeHTML(appointment.patientName)}</td>
+
+            <td>${escapeHTML(appointment.patientPhone)}</td>
+
+            <td>${escapeHTML(appointment.patientEmail)}</td>
+
+            <td>${escapeHTML(appointment.doctorName)}</td>
+
+            <td>${escapeHTML(appointment.date)}</td>
+
+            <td>${escapeHTML(appointment.time)}</td>
+
+            <td>
+                <span class="status ${getStatusClass(appointment.status)}">
+                    ${escapeHTML(appointment.status)}
+                </span>
+            </td>
+
+            <td>
+                ${appointment.status === "Booked" ? `
+                    <button class="btn-table"
+                        onclick="completeAppointment(${appointment.id})">
+                        Complete
+                    </button>
+                ` : "-"}
+            </td>
+
+        </tr>
+    `).join("");
 }
 
 function completeAppointment(id) {
     const appointments = getAppointments();
-    const appointment = appointments.find(item => item.id === id);
 
-    if (!appointment || appointment.status !== "Booked") return;
+    const updatedAppointments = appointments.map(appointment => {
+        if (appointment.id === id) {
+            appointment.status = "Completed";
+        }
 
-    appointment.status = "Completed";
-    saveAppointments(appointments);
+        return appointment;
+    });
+
+    saveAppointments(updatedAppointments);
+
+    renderDoctorAppointments();
 
     showMessage("Appointment marked as completed.");
-    renderDoctorAppointments();
 }
 
-/* RECEPTIONIST PAGE */
+/* RECEPTIONIST DASHBOARD */
 
 function loadReceptionistPage() {
     renderReceptionistAppointments();
 }
 
 function renderReceptionistAppointments() {
-    const container = document.getElementById("receptionistAppointments");
-    if (!container) return;
-
     const appointments = getAppointments();
 
-    document.getElementById("receptionistTotal").textContent =
+    const booked = appointments.filter(a => a.status === "Booked").length;
+    const completed = appointments.filter(a => a.status === "Completed").length;
+
+    document.getElementById("receptionTotal").textContent =
         appointments.length;
 
-    document.getElementById("receptionistBooked").textContent =
-        appointments.filter(item => item.status === "Booked").length;
+    document.getElementById("receptionBooked").textContent = booked;
 
-    container.innerHTML = "";
+    document.getElementById("receptionCompleted").textContent = completed;
 
-    if (appointments.length === 0) {
-        container.innerHTML = '<tr><td colspan="7" class="empty-message">No appointments found.</td></tr>';
-        return;
-    }
+    const search = document.getElementById("receptionSearch").value.toLowerCase();
+    const status = document.getElementById("receptionStatus").value;
 
-    appointments.forEach(appointment => {
-        container.innerHTML += `
+    const filtered = appointments.filter(appointment => {
+
+        const matchesSearch =
+            appointment.patientName.toLowerCase().includes(search) ||
+            appointment.doctorName.toLowerCase().includes(search);
+
+        const matchesStatus =
+            status === "" || appointment.status === status;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    const table = document.getElementById("receptionistAppointments");
+
+    if (filtered.length === 0) {
+        table.innerHTML = `
             <tr>
-                <td>${appointment.patientName}</td>
-                <td>${appointment.patientPhone}</td>
-                <td>${appointment.doctorName}</td>
-                <td>${appointment.hospital}</td>
-                <td>${appointment.date}</td>
-                <td>${appointment.slot}</td>
-                <td>
-                    <span class="status ${getStatusClass(appointment.status)}">
-                        ${appointment.status}
-                    </span>
+                <td colspan="8" class="text-center muted-copy">
+                    No appointments found.
                 </td>
             </tr>
         `;
-    });
+        return;
+    }
+
+    table.innerHTML = filtered.map(appointment => `
+        <tr>
+
+            <td>${escapeHTML(appointment.patientName)}</td>
+
+            <td>${escapeHTML(appointment.patientPhone)}</td>
+
+            <td>${escapeHTML(appointment.patientEmail)}</td>
+
+            <td>${escapeHTML(appointment.doctorName)}</td>
+
+            <td>${escapeHTML(appointment.specialty)}</td>
+
+            <td>${escapeHTML(appointment.date)}</td>
+
+            <td>${escapeHTML(appointment.time)}</td>
+
+            <td>
+                <span class="status ${getStatusClass(appointment.status)}">
+                    ${escapeHTML(appointment.status)}
+                </span>
+            </td>
+
+        </tr>
+    `).join("");
 }
 
 /* PAGE INITIALIZATION */
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (document.getElementById("patientWelcome")) {
+
+    if (document.getElementById("doctorList")) {
         loadPatientPage();
     }
 
@@ -478,4 +601,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("receptionistAppointments")) {
         loadReceptionistPage();
     }
+
 });
