@@ -87,6 +87,16 @@ function getToday() {
 
 /* PATIENT DETAILS */
 
+  function populateDoctorSelect() {
+  const doctorSelect = document.getElementById("doctorSelect");
+  if (!doctorSelect) return;
+
+  doctorSelect.innerHTML = '<option value="">-- Select a Doctor --</option>' +
+    doctors.map(doctor => 
+      `<option value="${doctor.id}">${escapeHTML(doctor.name)} (${escapeHTML(doctor.specialty)})</option>`
+    ).join("");
+}
+
 function loadPatientPage() {
     const patient = getPatient();
 
@@ -108,7 +118,7 @@ function loadPatientPage() {
     }
 
     document.getElementById("appointmentDate").min = getToday();
-
+    populateDoctorSelect();
     renderDoctors();
     renderPatientAppointments();
 }
