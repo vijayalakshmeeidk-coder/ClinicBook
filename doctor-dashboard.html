@@ -3,677 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinicbook | Doctor Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <style>
-body {
-    background-color: #f9dadf;
-    background-image:
-        radial-gradient(
-          circle at 5% 10%,
-            #FFE9BD 0%,
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 95% 35%,
-            #d5eaff 0%,
-            transparent 30% 
-        ),
-        radial-gradient(
-            circle at 60% 100%,
-            #d1f0dd 0%,
-            transparent 32%
-        ),
-        radial-gradient(
-            circle at 45% 45%,
-            #e0ccf4 0%,
-            transparent 35%
-        );
-    background-attachment: fixed;
-}
-        .brand {
-            font-family: "Playfair Display", serif;
-            font-style: italic;
-            font-size: 27px;
-            font-weight: 700;
-            letter-spacing: -.7px;
-            color: #9e4f83;
-        }
-        .doctor{
-            font-family: "Playfair Display", serif;
-            /* font-style: italic; */
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: -.7px;
-            color: #000000;
-        }
-        .main-content {
-            padding: 30px 40px;
-        }
-        
-        .tab-content {
-            padding-top: 15px;
-        }
-        .stat-card {
-            border: none;
-            background-color: rgb(244, 233, 227);
-            border-radius: 18px;
-            padding: 25px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
-            min-height: 150px;
-        }
 
-        .stat-card h2 {
-            color: #a0495f;
-            font-weight: bold;
-            font-family: "Playfair Display", serif;
-        }
+    <title>Doctor Dashboard | ClinicBook</title>
 
-        .content-card {
-            background: rgb(255, 245, 241);
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
-            margin-bottom: 30px;
-        }
-
-        .table th {
-            color: #49315a;
-            font-size: 13px;
-        }
-
-        .table td {
-            vertical-align: middle;
-        }
-
-        .btn-primary {
-            background: #518e71;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: #4a8376;
-        }
-
-        .status {
-            padding: 6px 11px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .booked {
-            background: #fff0d4;
-            color: #b39768;
-        }
-
-        .completed {
-            background: #d9f5e8;
-            color: #18794e;
-        }
-
-        .cancelled {
-            background: #fee2e2;
-            color: #8e514d;
-        }
-
-        @media(max-width: 768px) {
-            .nav-pills .nav-link {
-                min-height: 50px;
-                text-align: center;
-                min-width: fit-content;
-            }
-            .main-content {
-                padding: 18px;
-            }
-        }
-.nav-pills .nav-link {
-    color: #6c4f96;
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    border-radius: 12px;
-    padding: 12px 20px;
-    letter-spacing: 0.5px;
-    transition: 0.3s ease;
-    font-family: "Work Sans", sans-serif;
-}
-
-.nav-pills .nav-link:hover {
-    background-color: #eee3ff;
-    transform: translateY(-2px);
-}
-
-.nav-pills .nav-link.active {
-    background-color: #dfcafa;
-    color: #55358a;
-}
-.book{
-    color: #6e557f;
-}
-#todayDate{
-    display: block;
-    border-radius: 12px;
-    border: 0.5px solid #2f0141;
-    padding: 8px 15px;
-    background-color: #e4d1ed;
-    color: #000000;
-}
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <main class="dashboard-shell">
-    <header class="topbar">
-        <div class="brand">Clinic<span class = "book"> Book</span></div>
-    <!-- doctor dashboard -->
-            <div class="col-md-10 main-content">
 
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <div>
-                    <h3 class = "doctor">Doctor Dashboard</h3>
-                    <p class="text-muted mb-0">Welcome back, Dr. Sharma!</p>
+    <nav class="navbar shadow-sm">
+        <div class="container">
+            <a href="index.html" class="brand">ClinicBook.</a>
+            <a href="index.html" class="btn btn-soft">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container-main">
+
+        <section class="welcome">
+            <h1>Doctor Dashboard</h1>
+            <p class="mb-0">Welcome back, Doctor!</p>
+            <p class="mt-2 mb-0" id="todayDate"></p>
+        </section>
+
+        <h2 class="section-title">Overview</h2>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card-custom">
+                    <p class="text-secondary">Total Appointments</p>
+                    <h2 id="totalAppointments">0</h2>
                 </div>
-
-                <div class="text-muted" id="todayDate"></div>
             </div>
-<!-- dashboard tabs -->
-<ul class="nav nav-pills dashboard-tabs mb-3" id="dashboardTabs">
 
-    <li class="nav-item">
-        <button class="nav-link active"
-            data-bs-toggle="pill"
-            data-bs-target="#overview">
-            Overview
-        </button>
-    </li>
-
-    <li class="nav-item">
-        <button class="nav-link"
-            data-bs-toggle="pill"
-            data-bs-target="#appointments">
-            Appointments
-        </button>
-    </li>
-
-    <li class="nav-item">
-        <button class="nav-link"
-            data-bs-toggle="pill"
-            data-bs-target="#slots">
-            My Slots
-        </button>
-    </li>
-
-    <li class="nav-item">
-        <button class="nav-link"
-            data-bs-toggle="pill"
-            data-bs-target="#profile">
-            My Profile
-        </button>
-    </li>
-
-</ul>
-<!-- tab -->
-<div class="tab-content">
-
-    <div class="tab-pane fade show active" id="overview">
-<!-- stats -->
-            <div class="row g-4 mb-5">
-
-                <div class="col-md-5">
-                    <div class="card stat-card">
-                        <p class="text-muted">Total Appointments</p>
-                        <h2 id="totalAppointments">0</h2>
-                    </div>
+            <div class="col-md-4">
+                <div class="card-custom">
+                    <p class="text-secondary">Booked Appointments</p>
+                    <h2 id="bookedAppointments">0</h2>
                 </div>
-
-                <div class="col-md-5">
-                    <div class="card stat-card">
-                        <p class="text-muted">Booked Appointments</p>
-                        <h2 id="bookedAppointments">0</h2>
-                    </div>
-                </div>
-
-                <div class="col-md-5">
-                    <div class="card stat-card">
-                        <p class="text-muted">Completed Appointments</p>
-                        <h2 id="completedAppointments">0</h2>
-                    </div>
-                </div>
-
             </div>
-    </div>
 
-    <div class="tab-pane fade" id="appointments">
-<!-- aapointments -->
-            <div class="content-card mb-4" id="appointments">
-
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h5>My Appointments</h5>
-
-                    <input type="date" id="appointmentDate"
-                           class="form-control" style="max-width:180px">
+            <div class="col-md-4">
+                <div class="card-custom">
+                    <p class="text-secondary">Completed Appointments</p>
+                    <h2 id="completedAppointments">0</h2>
                 </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Patient</th>
-                                <th>Time</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="appointmentTable"></tbody>
-                    </table>
-                </div>
-
-            </div>
-    </div>
-
-    <div class="tab-pane fade" id="slots">
-
-            <div class="content-card mb-4" id="slots">
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5>Manage Availability</h5>
-
-                    <button class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#slotModal">
-                        + Add Slot
-                    </button>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="slotTable"></tbody>
-                    </table>
-                </div>
-
-            </div>
-    </div>
-
-    <div class="tab-pane fade" id="profile">
-<!-- profile -->
-            <div class="content-card" id="profile">
-                <h5>Doctor Information</h5>
-                <p><strong>Name:</strong> Dr. Sharma</p>
-                <p><strong>Specialty:</strong> Cardiology</p>
-                <p><strong>Doctor ID:</strong> D001</p>
             </div>
 
         </div>
-    </div>
-</div>
-    </div>
 
-</div>
-<!-- slot model -->
-<div class="modal fade" id="slotModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
+        <h2 class="section-title">Patient Appointments</h2>
 
-            <div class="modal-header">
-                <h5 class="modal-title">Add Available Slot</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+        <div class="card-custom">
+            <div class="table-responsive">
 
-            <div class="modal-body">
+                <table class="table table-hover">
 
-                <form id="slotForm">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Phone</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                    <label class="form-label">Date</label>
-                    <input type="date" id="slotDate"
-                           class="form-control mb-3" required>
+                    <tbody id="doctorAppointments"></tbody>
 
-                    <label class="form-label">Start Time</label>
-                    <input type="time" id="startTime"
-                           class="form-control mb-3" required>
-
-                    <label class="form-label">End Time</label>
-                    <input type="time" id="endTime"
-                           class="form-control mb-3" required>
-
-                    <button type="submit" class="btn btn-primary w-100">
-                        Save Slot
-                    </button>
-
-                </form>
+                </table>
 
             </div>
         </div>
-    </div>
-</div>
 
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <footer>© 2026 ClinicBook.</footer>
 
-<script>
-
-// doctor id
-const doctorId = "D001";
-
-// local data
-function localDate() {
-    const d = new Date();
-    const offset = d.getTimezoneOffset();
-    return new Date(d.getTime() - offset * 60000)
-        .toISOString().split("T")[0];
-}
-
-const today = localDate();
-
-document.getElementById("todayDate").textContent =
-    new Date().toDateString();
-
-document.getElementById("appointmentDate").value = today;
-document.getElementById("appointmentDate").min = today;
-document.getElementById("slotDate").min = today;
-
-
-// sample data
-function getSampleData() {
-    return {
-        slots: [
-            {slotId:"S001", doctorId:"D001", date:today,
-             startTime:"09:00", endTime:"09:30"},
-            {slotId:"S002", doctorId:"D001", date:today,
-             startTime:"10:00", endTime:"10:30"},
-            {slotId:"S003", doctorId:"D001", date:today,
-             startTime:"11:00", endTime:"11:30"}
-        ],
-
-        appointments: [
-            {appointmentId:"A001", slotId:"S001",
-             doctorId:"D001", patientId:"P001",
-             patientName:"Rahul Mehta",
-             reason:"General Consultation", status:"Booked"},
-
-            {appointmentId:"A002", slotId:"S002",
-             doctorId:"D001", patientId:"P002",
-             patientName:"Ananya Das",
-             reason:"Regular Checkup", status:"Booked"}
-        ]
-    };
-}
-
-
-// local storage
-function getData() {
-    let data = localStorage.getItem("mediqueData");
-
-    if (!data) {
-        data = getSampleData();
-        saveData(data);
-    } else {
-        data = JSON.parse(data);
-    }
-
-    return data;
-}
-
-function saveData(data) {
-    localStorage.setItem("mediqueData", JSON.stringify(data));
-}
-
-
-// dashboard
-function renderDashboard() {
-
-    const data = getData();
-
-    const appointments = data.appointments.filter(
-        a => a.doctorId === doctorId
-    );
-
-    document.getElementById("totalAppointments").textContent =
-        appointments.filter(a => a.status !== "Cancelled").length;
-
-    document.getElementById("bookedAppointments").textContent =
-        appointments.filter(a => a.status === "Booked").length;
-
-    document.getElementById("completedAppointments").textContent =
-        appointments.filter(a => a.status === "Completed").length;
-
-    renderAppointments(data);
-    renderSlots(data);
-}
-
-
-// appointments
-function renderAppointments(data) {
-
-    const selectedDate =
-        document.getElementById("appointmentDate").value;
-
-    const table = document.getElementById("appointmentTable");
-
-    const appointments = data.appointments.filter(a => {
-        const slot = data.slots.find(s => s.slotId === a.slotId);
-
-        return a.doctorId === doctorId &&
-               slot && slot.date === selectedDate;
-    });
-
-    appointments.sort((a, b) => {
-        const sa = data.slots.find(s => s.slotId === a.slotId);
-        const sb = data.slots.find(s => s.slotId === b.slotId);
-        return sa.startTime.localeCompare(sb.startTime);
-    });
-
-    if (appointments.length === 0) {
-        table.innerHTML = `
-            <tr><td colspan="5" class="text-center text-muted">
-                No appointments for this date.
-            </td></tr>`;
-        return;
-    }
-
-    table.innerHTML = appointments.map(a => {
-
-        const slot = data.slots.find(s => s.slotId === a.slotId);
-
-        return `
-            <tr>
-                <td>${a.patientName}</td>
-                <td>${slot.startTime} - ${slot.endTime}</td>
-                <td>${a.reason}</td>
-                <td>
-                    <span class="status ${a.status.toLowerCase()}">
-                        ${a.status}
-                    </span>
-                </td>
-                <td>
-                    ${a.status === "Booked" ? `
-                        <button class="btn btn-sm btn-success"
-                            onclick="completeAppointment('${a.appointmentId}')">
-                            Complete
-                        </button>` : "-"}
-                </td>
-            </tr>
-        `;
-    }).join("");
-}
-
-
-// slots
-function renderSlots(data) {
-
-    const table = document.getElementById("slotTable");
-
-    const slots = data.slots.filter(
-        s => s.doctorId === doctorId
-    ).sort((a, b) =>
-        a.date.localeCompare(b.date) ||
-        a.startTime.localeCompare(b.startTime)
-    );
-
-    if (slots.length === 0) {
-        table.innerHTML = `
-            <tr><td colspan="5" class="text-center">
-                No slots available. Add a new slot.
-            </td></tr>`;
-        return;
-    }
-
-    table.innerHTML = slots.map(slot => {
-
-        const appointment = data.appointments.find(a =>
-            a.slotId === slot.slotId && a.status === "Booked"
-        );
-
-        const status = appointment ? "Booked" : "Available";
-
-        return `
-            <tr>
-                <td>${slot.date}</td>
-                <td>${slot.startTime}</td>
-                <td>${slot.endTime}</td>
-                <td>
-                    <span class="status ${status.toLowerCase()}">
-                        ${status}
-                    </span>
-                </td>
-                <td>
-                    ${!appointment ? `
-                        <button class="btn btn-sm btn-outline-danger"
-                            onclick="removeSlot('${slot.slotId}')">
-                            Remove
-                        </button>` : "-"}
-                </td>
-            </tr>
-        `;
-    }).join("");
-}
-
-
-// adding slot
-document.getElementById("slotForm").addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const data = getData();
-
-    const date = document.getElementById("slotDate").value;
-    const start = document.getElementById("startTime").value;
-    const end = document.getElementById("endTime").value;
-
-    if (date < today || start >= end) {
-        alert("Please enter a valid future date and time.");
-        return;
-    }
-
-// to avoid double booking
-    const overlap = data.slots.some(slot => {
-
-        if (slot.doctorId !== doctorId || slot.date !== date) {
-            return false;
-        }
-
-        return start < slot.endTime && end > slot.startTime;
-    });
-
-    if (overlap) {
-        alert("This slot overlaps with an existing slot!");
-        return;
-    }
-
-    data.slots.push({
-        slotId: "S" + Date.now(),
-        doctorId: doctorId,
-        date: date,
-        startTime: start,
-        endTime: end
-    });
-
-    saveData(data);
-
-    this.reset();
-
-    bootstrap.Modal.getInstance(
-        document.getElementById("slotModal")
-    ).hide();
-
-    renderDashboard();
-
-    alert("New slot added successfully!");
-});
-
-
-// removiing slot
-function removeSlot(slotId) {
-
-    const data = getData();
-
-    const isBooked = data.appointments.some(a =>
-        a.slotId === slotId && a.status === "Booked"
-    );
-
-    if (isBooked) {
-        alert("Booked slots cannot be removed!");
-        return;
-    }
-
-    if (!confirm("Are you sure you want to remove this slot?")) {
-        return;
-    }
-
-    data.slots = data.slots.filter(s => s.slotId !== slotId);
-
-    saveData(data);
-    renderDashboard();
-}
-
-
-// completion
-function completeAppointment(appointmentId) {
-
-    const data = getData();
-
-    const appointment = data.appointments.find(
-        a => a.appointmentId === appointmentId
-    );
-
-    if (!appointment || appointment.status !== "Booked") {
-        alert("Only booked appointments can be completed.");
-        return;
-    }
-
-    appointment.status = "Completed";
-
-    saveData(data);
-    renderDashboard();
-
-    alert("Appointment marked as completed!");
-}
-
-
-// filteringdata
-document.getElementById("appointmentDate").addEventListener(
-    "change", renderDashboard
-);
-
-
-// initialize
-renderDashboard();
-
-</script>
+    <script src="script.js"></script>
 
 </body>
 </html>
