@@ -140,9 +140,7 @@ function savePatientDetails(event) {
 /* DOCTOR LIST */
 
 function renderDoctors() {
-    const search = document.getElementById("doctorSearch")
-        .value.toLowerCase();
-
+    const search = document.getElementById("doctorSearch").value.toLowerCase();
     const specialty = document.getElementById("specialtyFilter").value;
 
     const filteredDoctors = doctors.filter(doctor => {
@@ -158,7 +156,23 @@ function renderDoctors() {
     });
 
     const doctorList = document.getElementById("doctorList");
+    const doctorSelect = document.getElementById("doctorSelect");
 
+    // Populate the doctor dropdown
+    const previousSelection = doctorSelect.value;
+
+    doctorSelect.innerHTML = `
+        <option value="">Choose a doctor</option>
+        ${doctors.map(doctor => `
+            <option value="${doctor.id}">
+                ${doctor.name} - ${doctor.specialty}
+            </option>
+        `).join("")}
+    `;
+
+    doctorSelect.value = previousSelection;
+
+    // Display doctor cards
     if (filteredDoctors.length === 0) {
         doctorList.innerHTML =
             '<div class="empty-state">No doctors found.</div>';
@@ -198,7 +212,6 @@ function renderDoctors() {
         </div>
     `).join("");
 }
-
 /* SELECT DOCTOR */
 
 function selectDoctor(id) {
