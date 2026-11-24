@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn">
+                    <button type="submit" class="btn-primary-soft">
                         Login to Dashboard
                     </button>
                 </div>
@@ -45,7 +45,7 @@
         <!-- DOCTOR DASHBOARD -->
         <div id="doctorDashboardContent" hidden>
 
-            <section class="card">
+            <section class="profile-card">
                 <h1>Welcome, <span id="doctorProfileName"></span></h1>
 
                 <p class="subtext">
@@ -53,31 +53,31 @@
                     <span id="doctorProfileHospital"></span>
                 </p>
 
-                <button class="btn" onclick="logoutDoctor()">
+                <button class="btn-quiet" onclick="logoutDoctor()">
                     Logout
                 </button>
             </section>
 
-            <section class="summary-grid">
+            <section class="stats-grid">
 
-                <div class="summary-card">
+                <div class="stat-card">
                     <h3>Total Appointments</h3>
                     <p id="totalAppointments">0</p>
                 </div>
 
-                <div class="summary-card">
+                <div class="stat-card">
                     <h3>Booked</h3>
                     <p id="bookedAppointments">0</p>
                 </div>
 
-                <div class="summary-card">
+                <div class="stat-card">
                     <h3>Completed</h3>
                     <p id="completedAppointments">0</p>
                 </div>
 
             </section>
 
-            <section class="card">
+            <section class="table-card">
                 <h2>My Appointments</h2>
 
                 <div class="table-wrap">
