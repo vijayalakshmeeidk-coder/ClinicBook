@@ -231,6 +231,7 @@ function selectDoctor(id) {
 
 /* AVAILABLE SLOTS */
 
+/*doctor dashboard*/
 function renderSlots() {
     const doctorId = document.getElementById("doctorSelect").value;
     const date = document.getElementById("appointmentDate").value;
@@ -436,26 +437,36 @@ function cancelAppointment(id) {
 
 /* DOCTOR DASHBOARD */
 
-function populateDoctorLoginSelect(selectedId = "") {
+function populateDoctorLoginSelect() {
     const select = document.getElementById("doctorLoginSelect");
 
     if (!select) return;
 
-    select.innerHTML =
-        '<option value="">Choose a doctor</option>' +
-        doctors.map(doctor => `
-            <option value="${doctor.id}"
-                ${String(doctor.id) === String(selectedId) ? "selected" : ""}>
-                ${escapeHTML(doctor.name)} (${escapeHTML(doctor.specialty)})
+    select.innerHTML = `
+        <option value="">Choose a doctor</option>
+        ${doctors.map(doctor => `
+            <option value="${doctor.id}">
+                ${escapeHTML(doctor.name)} - ${escapeHTML(doctor.specialty)}
             </option>
-        `).join("");
+        `).join("")}
+    `;
+}
+
+function loadDoctorPage() {
+    // Always ask the doctor to select an account when opening this page
+    localStorage.removeItem("clinicDoctor");
+
+    document.getElementById("doctorLoginSection").hidden = false;
+    document.getElementById("doctorDashboardContent").hidden = true;
+
+    populateDoctorLoginSelect();
 }
 
 function saveDoctorLogin(event) {
     event.preventDefault();
 
-    const select = document.getElementById("doctorLoginSelect");
-    const doctor = getDoctor(select.value);
+    const doctorId = document.getElementById("doctorLoginSelect").value;
+    const doctor = getDoctor(doctorId);
 
     if (!doctor) {
         showMessage("Please select a doctor.");
@@ -464,31 +475,25 @@ function saveDoctorLogin(event) {
 
     localStorage.setItem("clinicDoctor", JSON.stringify(doctor));
 
-    loadDoctorPage();
+    document.getElementById("doctorLoginSection").hidden = true;
+    document.getElementById("doctorDashboardContent").hidden = false;
 
-    showMessage("Doctor account selected successfully.");
-}
-
-function loadDoctorPage() {
-    const activeDoctor = getLoggedInDoctor();
-
-    populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
-
-    const nameEl = document.getElementById("doctorProfileName");
-    const specialtyEl = document.getElementById("doctorProfileSpecialty");
-    const hospitalEl = document.getElementById("doctorProfileHospital");
-
-    if (activeDoctor) {
-        nameEl.textContent = activeDoctor.name;
-        specialtyEl.textContent = activeDoctor.specialty;
-        hospitalEl.textContent = activeDoctor.hospital;
-    } else {
-        nameEl.textContent = "Not selected";
-        specialtyEl.textContent = "Not selected";
-        hospitalEl.textContent = "Not selected";
-    }
+    document.getElementById("doctorProfileName").textContent = doctor.name;
+    document.getElementById("doctorProfileSpecialty").textContent = doctor.specialty;
+    document.getElementById("doctorProfileHospital").textContent = doctor.hospital;
 
     renderDoctorAppointments();
+}
+
+function logoutDoctor() {
+    localStorage.removeItem("clinicDoctor");
+
+    document.getElementById("doctorDashboardContent").hidden = true;
+    document.getElementById("doctorLoginSection").hidden = false;
+
+    document.getElementById("doctorLoginSelect").value = "";
+
+    populateDoctorLoginSelect();
 }
 
 function renderDoctorAppointments() {
@@ -515,13 +520,7 @@ function renderDoctorAppointments() {
     document.getElementById("completedAppointments").textContent = completed;
 
     if (!activeDoctor) {
-        table.innerHTML = `
-            <tr>
-                <td colspan="8" class="text-center muted-copy">
-                    Please select a doctor account to view appointments.
-                </td>
-            </tr>
-        `;
+        table.innerHTML = "";
         return;
     }
 
@@ -578,7 +577,6 @@ function completeAppointment(id) {
 
     showMessage("Appointment marked as completed.");
 }
-
 /* RECEPTIONIST DASHBOARD */
 
 function loadReceptionistPage() {
