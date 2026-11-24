@@ -59,6 +59,10 @@ function getDoctor(id) {
     return doctors.find(doctor => doctor.id === Number(id));
 }
 
+function getLoggedInDoctor() {
+    return JSON.parse(localStorage.getItem("clinicDoctor")) || null;
+}
+
 function showMessage(message) {
     alert(message);
 }
@@ -80,22 +84,13 @@ function getStatusClass(status) {
 function getToday() {
     const date = new Date();
     const offset = date.getTimezoneOffset();
+
     return new Date(date.getTime() - offset * 60000)
         .toISOString()
         .split("T")[0];
 }
 
-/* PATIENT DETAILS */
-
-  function populateDoctorSelect() {
-  const doctorSelect = document.getElementById("doctorSelect");
-  if (!doctorSelect) return;
-
-  doctorSelect.innerHTML = '<option value="">-- Select a Doctor --</option>' +
-    doctors.map(doctor => 
-      `<option value="${doctor.id}">${escapeHTML(doctor.name)} (${escapeHTML(doctor.specialty)})</option>`
-    ).join("");
-}
+/* PATIENT DASHBOARD */
 
 function loadPatientPage() {
     const patient = getPatient();
@@ -118,7 +113,7 @@ function loadPatientPage() {
     }
 
     document.getElementById("appointmentDate").min = getToday();
-    populateDoctorSelect();
+
     renderDoctors();
     renderPatientAppointments();
 }
@@ -150,8 +145,15 @@ function savePatientDetails(event) {
 /* DOCTOR LIST */
 
 function renderDoctors() {
-    const search = document.getElementById("doctorSearch").value.toLowerCase();
-    const specialty = document.getElementById("specialtyFilter").value;
+    const searchInput = document.getElementById("doctorSearch");
+    const specialtyFilter = document.getElementById("specialtyFilter");
+    const doctorList = document.getElementById("doctorList");
+    const doctorSelect = document.getElementById("doctorSelect");
+
+    if (!doctorList || !doctorSelect) return;
+
+    const search = searchInput.value.toLowerCase();
+    const specialty = specialtyFilter.value;
 
     const filteredDoctors = doctors.filter(doctor => {
         const matchesSearch =
@@ -165,24 +167,19 @@ function renderDoctors() {
         return matchesSearch && matchesSpecialty;
     });
 
-    const doctorList = document.getElementById("doctorList");
-    const doctorSelect = document.getElementById("doctorSelect");
-
-    // Populate the doctor dropdown
     const previousSelection = doctorSelect.value;
 
     doctorSelect.innerHTML = `
         <option value="">Choose a doctor</option>
         ${doctors.map(doctor => `
             <option value="${doctor.id}">
-                ${doctor.name} - ${doctor.specialty}
+                ${escapeHTML(doctor.name)} - ${escapeHTML(doctor.specialty)}
             </option>
         `).join("")}
     `;
 
     doctorSelect.value = previousSelection;
 
-    // Display doctor cards
     if (filteredDoctors.length === 0) {
         doctorList.innerHTML =
             '<div class="empty-state">No doctors found.</div>';
@@ -191,7 +188,6 @@ function renderDoctors() {
 
     doctorList.innerHTML = filteredDoctors.map(doctor => `
         <div class="doctor-card">
-
             <div class="doctor-avatar">
                 ${escapeHTML(doctor.name.charAt(0))}
             </div>
@@ -218,15 +214,12 @@ function renderDoctors() {
                 onclick="selectDoctor(${doctor.id})">
                 Book Appointment
             </button>
-
         </div>
     `).join("");
 }
-/* SELECT DOCTOR */
 
 function selectDoctor(id) {
     document.getElementById("doctorSelect").value = id;
-
     document.getElementById("selectedSlot").value = "";
 
     renderSlots();
@@ -241,7 +234,6 @@ function selectDoctor(id) {
 function renderSlots() {
     const doctorId = document.getElementById("doctorSelect").value;
     const date = document.getElementById("appointmentDate").value;
-
     const slotList = document.getElementById("slotList");
 
     document.getElementById("selectedSlot").value = "";
@@ -261,7 +253,6 @@ function renderSlots() {
     const appointments = getAppointments();
 
     slotList.innerHTML = timeSlots.map(slot => {
-
         const alreadyBooked = appointments.some(appointment =>
             Number(appointment.doctorId) === Number(doctorId) &&
             appointment.date === date &&
@@ -280,7 +271,6 @@ function renderSlots() {
 
             </button>
         `;
-
     }).join("");
 }
 
@@ -370,6 +360,8 @@ function renderPatientAppointments() {
     const patient = getPatient();
     const table = document.getElementById("patientAppointments");
 
+    if (!table) return;
+
     if (!patient) {
         table.innerHTML = `
             <tr>
@@ -398,21 +390,15 @@ function renderPatientAppointments() {
 
     table.innerHTML = appointments.map(appointment => `
         <tr>
-
             <td>${escapeHTML(appointment.doctorName)}</td>
-
             <td>${escapeHTML(appointment.specialty)}</td>
-
             <td>${escapeHTML(appointment.date)}</td>
-
             <td>${escapeHTML(appointment.time)}</td>
-
             <td>
                 <span class="status ${getStatusClass(appointment.status)}">
                     ${escapeHTML(appointment.status)}
                 </span>
             </td>
-
             <td>
                 ${appointment.status === "Booked" ? `
                     <button class="btn-table danger"
@@ -421,7 +407,6 @@ function renderPatientAppointments() {
                     </button>
                 ` : "-"}
             </td>
-
         </tr>
     `).join("");
 }
@@ -451,120 +436,119 @@ function cancelAppointment(id) {
 
 /* DOCTOR DASHBOARD */
 
-function loadDoctorPage() {
-    document.getElementById("todayDate").textContent = getToday();
-
-    renderDoctorAppointments();
-    function getLoggedInDoctor() {
-  return JSON.parse(localStorage.getItem("clinicDoctor") || "null");
-}
-
 function populateDoctorLoginSelect(selectedId = "") {
-  const select = document.getElementById("doctorLoginSelect");
-  if (!select) return;
+    const select = document.getElementById("doctorLoginSelect");
 
-  select.innerHTML =
-    '<option value="">Choose a doctor</option>' +
-    doctors
-      .map(
-        (doc) =>
-          `<option value="${doc.id}" ${String(doc.id) === String(selectedId) ? "selected" : ""}>${escapeHTML(doc.name)} (${escapeHTML(doc.specialty)})</option>`
-      )
-      .join("");
+    if (!select) return;
+
+    select.innerHTML =
+        '<option value="">Choose a doctor</option>' +
+        doctors.map(doctor => `
+            <option value="${doctor.id}"
+                ${String(doctor.id) === String(selectedId) ? "selected" : ""}>
+                ${escapeHTML(doctor.name)} (${escapeHTML(doctor.specialty)})
+            </option>
+        `).join("");
 }
 
 function saveDoctorLogin(event) {
-  event.preventDefault();
-  const select = document.getElementById("doctorLoginSelect");
-  const doctorId = Number(select?.value);
-  const doctor = getDoctor(doctorId);
-  if (!doctor) return;
+    event.preventDefault();
 
-  localStorage.setItem("clinicDoctor", JSON.stringify(doctor));
-  loadDoctorPage();
+    const select = document.getElementById("doctorLoginSelect");
+    const doctor = getDoctor(select.value);
+
+    if (!doctor) {
+        showMessage("Please select a doctor.");
+        return;
+    }
+
+    localStorage.setItem("clinicDoctor", JSON.stringify(doctor));
+
+    loadDoctorPage();
+
+    showMessage("Doctor account selected successfully.");
 }
 
 function loadDoctorPage() {
-  const activeDoctor = getLoggedInDoctor();
-  populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
+    const activeDoctor = getLoggedInDoctor();
 
-  const welcomeEl = document.getElementById("doctorWelcome");
-  const nameEl = document.getElementById("doctorProfileName");
-  const specialtyEl = document.getElementById("doctorProfileSpecialty");
-  const hospitalEl = document.getElementById("doctorProfileHospital");
+    populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
 
-  if (activeDoctor) {
-    if (welcomeEl) welcomeEl.textContent = `Welcome, ${activeDoctor.name}`;
-    if (nameEl) nameEl.textContent = activeDoctor.name;
-    if (specialtyEl) specialtyEl.textContent = activeDoctor.specialty;
-    if (hospitalEl) hospitalEl.textContent = activeDoctor.hospital;
-  } else {
-    if (welcomeEl) welcomeEl.textContent = "Welcome";
-    if (nameEl) nameEl.textContent = "Not selected";
-    if (specialtyEl) specialtyEl.textContent = "Not selected";
-    if (hospitalEl) hospitalEl.textContent = "Not selected";
-  }
+    const nameEl = document.getElementById("doctorProfileName");
+    const specialtyEl = document.getElementById("doctorProfileSpecialty");
+    const hospitalEl = document.getElementById("doctorProfileHospital");
 
-  renderDoctorAppointments();
-}
+    if (activeDoctor) {
+        nameEl.textContent = activeDoctor.name;
+        specialtyEl.textContent = activeDoctor.specialty;
+        hospitalEl.textContent = activeDoctor.hospital;
+    } else {
+        nameEl.textContent = "Not selected";
+        specialtyEl.textContent = "Not selected";
+        hospitalEl.textContent = "Not selected";
+    }
+
+    renderDoctorAppointments();
 }
 
 function renderDoctorAppointments() {
-  const appointments = getAppointments();
-  const activeDoctor = getLoggedInDoctor();
-  const visibleAppointments = activeDoctor
-    ? appointments.filter((appt) => Number(appt.doctorId) === Number(activeDoctor.id))
-    : [];
+    const table = document.getElementById("doctorAppointments");
 
-  const booked = visibleAppointments.filter((a) => a.status === "Booked").length;
-  const completed = visibleAppointments.filter((a) => a.status === "Completed").length;
+    if (!table) return;
 
-  document.getElementById("totalAppointments").textContent = visibleAppointments.length;
-  document.getElementById("bookedAppointments").textContent = booked;
-  document.getElementById("completedAppointments").textContent = completed;
+    const activeDoctor = getLoggedInDoctor();
 
-  const table = document.getElementById("doctorAppointments");
-  if (!activeDoctor) {
-    table.innerHTML = `<tr><td colspan="8" class="text-center muted-copy">Please log in as a doctor to view appointments.</td></tr>`;
-    return;
-  }
-  if (visibleAppointments.length === 0) {
-    table.innerHTML = `<tr><td colspan="8" class="text-center muted-copy">No appointments available.</td></tr>`;
-    return;
-  }
+    const visibleAppointments = activeDoctor
+        ? getAppointments().filter(appointment =>
+            Number(appointment.doctorId) === Number(activeDoctor.id)
+        )
+        : [];
 
-  table.innerHTML = visibleAppointments.map((appointment) => `
-    <tr>
-      <td>${escapeHTML(appointment.patientName)}</td>
-      <td>${escapeHTML(appointment.patientPhone)}</td>
-      <td>${escapeHTML(appointment.patientEmail)}</td>
-      <td>${escapeHTML(appointment.doctorName)}</td>
-      ...
-    </tr>
-  `).join("");
-}
+    const booked = visibleAppointments.filter(a => a.status === "Booked").length;
+    const completed = visibleAppointments.filter(a => a.status === "Completed").length;
 
-    table.innerHTML = appointments.map(appointment => `
+    document.getElementById("totalAppointments").textContent =
+        visibleAppointments.length;
+
+    document.getElementById("bookedAppointments").textContent = booked;
+
+    document.getElementById("completedAppointments").textContent = completed;
+
+    if (!activeDoctor) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center muted-copy">
+                    Please select a doctor account to view appointments.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    if (visibleAppointments.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center muted-copy">
+                    No appointments available.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = visibleAppointments.map(appointment => `
         <tr>
-
             <td>${escapeHTML(appointment.patientName)}</td>
-
             <td>${escapeHTML(appointment.patientPhone)}</td>
-
             <td>${escapeHTML(appointment.patientEmail)}</td>
-
             <td>${escapeHTML(appointment.doctorName)}</td>
-
             <td>${escapeHTML(appointment.date)}</td>
-
             <td>${escapeHTML(appointment.time)}</td>
-
             <td>
                 <span class="status ${getStatusClass(appointment.status)}">
                     ${escapeHTML(appointment.status)}
                 </span>
             </td>
-
             <td>
                 ${appointment.status === "Booked" ? `
                     <button class="btn-table"
@@ -573,7 +557,6 @@ function renderDoctorAppointments() {
                     </button>
                 ` : "-"}
             </td>
-
         </tr>
     `).join("");
 }
@@ -603,6 +586,10 @@ function loadReceptionistPage() {
 }
 
 function renderReceptionistAppointments() {
+    const table = document.getElementById("receptionistAppointments");
+
+    if (!table) return;
+
     const appointments = getAppointments();
 
     const booked = appointments.filter(a => a.status === "Booked").length;
@@ -619,7 +606,6 @@ function renderReceptionistAppointments() {
     const status = document.getElementById("receptionStatus").value;
 
     const filtered = appointments.filter(appointment => {
-
         const matchesSearch =
             appointment.patientName.toLowerCase().includes(search) ||
             appointment.doctorName.toLowerCase().includes(search);
@@ -629,8 +615,6 @@ function renderReceptionistAppointments() {
 
         return matchesSearch && matchesStatus;
     });
-
-    const table = document.getElementById("receptionistAppointments");
 
     if (filtered.length === 0) {
         table.innerHTML = `
@@ -645,27 +629,18 @@ function renderReceptionistAppointments() {
 
     table.innerHTML = filtered.map(appointment => `
         <tr>
-
             <td>${escapeHTML(appointment.patientName)}</td>
-
             <td>${escapeHTML(appointment.patientPhone)}</td>
-
             <td>${escapeHTML(appointment.patientEmail)}</td>
-
             <td>${escapeHTML(appointment.doctorName)}</td>
-
             <td>${escapeHTML(appointment.specialty)}</td>
-
             <td>${escapeHTML(appointment.date)}</td>
-
             <td>${escapeHTML(appointment.time)}</td>
-
             <td>
                 <span class="status ${getStatusClass(appointment.status)}">
                     ${escapeHTML(appointment.status)}
                 </span>
             </td>
-
         </tr>
     `).join("");
 }
