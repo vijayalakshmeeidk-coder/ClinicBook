@@ -56,7 +56,7 @@ function getPatient() {
 }
 
 function getDoctor(id) {
-    return doctors.find(doctor => doctor.id === Number(id));
+  return doctors.find((doc) => Number(doc.id) === Number(id)) || null;
 }
 
 function getLoggedInDoctor() {
@@ -143,6 +143,22 @@ function savePatientDetails(event) {
 }
 
 /* DOCTOR LIST */
+function getLoggedInDoctor() {
+  try {
+    const raw = localStorage.getItem("clinicDoctor");
+    const saved = raw ? JSON.parse(raw) : null;
+    if (saved && saved.id) {
+      return getDoctor(saved.id) || doctors[0];
+    }
+  } catch (err) {
+    console.warn("Invalid clinicDoctor data in localStorage:", err);
+  }
+  return doctors[0];
+}
+
+function populateDoctorLoginSelect() {
+  // ...
+}
 
 function renderDoctors() {
     const searchInput = document.getElementById("doctorSearch");
@@ -231,7 +247,6 @@ function selectDoctor(id) {
 
 /* AVAILABLE SLOTS */
 
-/*doctor dashboard*/
 function renderSlots() {
     const doctorId = document.getElementById("doctorSelect").value;
     const date = document.getElementById("appointmentDate").value;
@@ -437,63 +452,54 @@ function cancelAppointment(id) {
 
 /* DOCTOR DASHBOARD */
 
-function populateDoctorLoginSelect() {
+function populateDoctorLoginSelect(selectedId = "") {
     const select = document.getElementById("doctorLoginSelect");
 
     if (!select) return;
 
-    select.innerHTML = `
-        <option value="">Choose a doctor</option>
-        ${doctors.map(doctor => `
-            <option value="${doctor.id}">
-                ${escapeHTML(doctor.name)} - ${escapeHTML(doctor.specialty)}
+    select.innerHTML =
+        '<option value="">Choose a doctor</option>' +
+        doctors.map(doctor => `
+            <option value="${doctor.id}"
+                ${String(doctor.id) === String(selectedId) ? "selected" : ""}>
+                ${escapeHTML(doctor.name)} (${escapeHTML(doctor.specialty)})
             </option>
-        `).join("")}
-    `;
-}
-
-function loadDoctorPage() {
-    // Always ask the doctor to select an account when opening this page
-    localStorage.removeItem("clinicDoctor");
-
-    document.getElementById("doctorLoginSection").hidden = false;
-    document.getElementById("doctorDashboardContent").hidden = true;
-
-    populateDoctorLoginSelect();
+        `).join("");
 }
 
 function saveDoctorLogin(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const doctorId = document.getElementById("doctorLoginSelect").value;
-    const doctor = getDoctor(doctorId);
+  const select = document.getElementById("doctorLoginSelect");
+  if (!select) return;
 
-    if (!doctor) {
-        showMessage("Please select a doctor.");
-        return;
-    }
+  const selectedDoctor = getDoctor(select.value);
+  if (!selectedDoctor) return;
 
-    localStorage.setItem("clinicDoctor", JSON.stringify(doctor));
-
-    document.getElementById("doctorLoginSection").hidden = true;
-    document.getElementById("doctorDashboardContent").hidden = false;
-
-    document.getElementById("doctorProfileName").textContent = doctor.name;
-    document.getElementById("doctorProfileSpecialty").textContent = doctor.specialty;
-    document.getElementById("doctorProfileHospital").textContent = doctor.hospital;
-
-    renderDoctorAppointments();
+  localStorage.setItem("clinicDoctor", JSON.stringify({ id: selectedDoctor.id }));
+  loadDoctorPage();
 }
 
-function logoutDoctor() {
-    localStorage.removeItem("clinicDoctor");
+function loadDoctorPage() {
+    const activeDoctor = getLoggedInDoctor();
 
-    document.getElementById("doctorDashboardContent").hidden = true;
-    document.getElementById("doctorLoginSection").hidden = false;
+    populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
 
-    document.getElementById("doctorLoginSelect").value = "";
+    const nameEl = document.getElementById("doctorProfileName");
+    const specialtyEl = document.getElementById("doctorProfileSpecialty");
+    const hospitalEl = document.getElementById("doctorProfileHospital");
 
-    populateDoctorLoginSelect();
+    if (activeDoctor) {
+        nameEl.textContent = activeDoctor.name;
+        specialtyEl.textContent = activeDoctor.specialty;
+        hospitalEl.textContent = activeDoctor.hospital;
+    } else {
+        nameEl.textContent = "Not selected";
+        specialtyEl.textContent = "Not selected";
+        hospitalEl.textContent = "Not selected";
+    }
+
+    renderDoctorAppointments();
 }
 
 function renderDoctorAppointments() {
@@ -520,7 +526,13 @@ function renderDoctorAppointments() {
     document.getElementById("completedAppointments").textContent = completed;
 
     if (!activeDoctor) {
-        table.innerHTML = "";
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center muted-copy">
+                    Please select a doctor account to view appointments.
+                </td>
+            </tr>
+        `;
         return;
     }
 
@@ -577,6 +589,7 @@ function completeAppointment(id) {
 
     showMessage("Appointment marked as completed.");
 }
+
 /* RECEPTIONIST DASHBOARD */
 
 function loadReceptionistPage() {
@@ -645,18 +658,17 @@ function renderReceptionistAppointments() {
 
 /* PAGE INITIALIZATION */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("doctorList")) {
+    loadPatientPage();
+  }
 
-    if (document.getElementById("doctorList")) {
-        loadPatientPage();
-    }
+  if (document.getElementById("doctorAppointments") || document.getElementById("doctorLoginSelect")) {
+    loadDoctorPage();
+  }
 
-    if (document.getElementById("doctorAppointments")) {
-        loadDoctorPage();
-    }
-
-    if (document.getElementById("receptionistAppointments")) {
-        loadReceptionistPage();
-    }
+  if (document.getElementById("receptionistAppointments")) {
+    loadReceptionistPage();
+  }
 
 });
