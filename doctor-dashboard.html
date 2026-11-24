@@ -1,75 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doctor Dashboard - ClinicBook</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - ClinicBook</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="logo">ClinicBook</div>
-    <nav>
-      <a href="index.html">Patient</a>
-      <a href="doctor.html" class="active">Doctor</a>
-      <a href="receptionist.html">Receptionist</a>
-    </nav>
-  </header>
+    <header class="navbar">
+        <div class="logo">ClinicBook</div>
+        <nav>
+            <a href="index.html">Patient</a>
+            <a href="doctor-dashboard.html" class="active">Doctor</a>
+            <a href="receptionist-dashboard.html">Receptionist</a>
+        </nav>
+    </header>
 
-  <main class="container">
-    <section class="card">
-      <h1>Doctor Dashboard</h1>
-      <p id="doctorProfile" class="subtext">Loading doctor profile...</p>
+    <main class="container">
 
-      <!-- Added Doctor Login Form -->
-      <form onsubmit="saveDoctorLogin(event)" class="form-grid" style="margin-top: 16px;">
-        <div class="form-group">
-          <label for="doctorLoginSelect">Switch Doctor Account</label>
-          <select id="doctorLoginSelect" required></select>
+        <!-- DOCTOR LOGIN -->
+        <section class="card" id="doctorLoginSection">
+            <h1>Doctor Login</h1>
+            <p class="subtext">Please select your doctor account to continue.</p>
+
+            <form onsubmit="saveDoctorLogin(event)" class="form-grid">
+
+                <div class="form-group">
+                    <label for="doctorLoginSelect">Who are you?</label>
+                    <select id="doctorLoginSelect" required>
+                        <option value="">Choose a doctor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn">
+                        Login to Dashboard
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <!-- DOCTOR DASHBOARD -->
+        <div id="doctorDashboardContent" hidden>
+
+            <section class="card">
+                <h1>Welcome, <span id="doctorProfileName"></span></h1>
+
+                <p class="subtext">
+                    <span id="doctorProfileSpecialty"></span> |
+                    <span id="doctorProfileHospital"></span>
+                </p>
+
+                <button class="btn" onclick="logoutDoctor()">
+                    Logout
+                </button>
+            </section>
+
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <h3>Total Appointments</h3>
+                    <p id="totalAppointments">0</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>Booked</h3>
+                    <p id="bookedAppointments">0</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3>Completed</h3>
+                    <p id="completedAppointments">0</p>
+                </div>
+
+            </section>
+
+            <section class="card">
+                <h2>My Appointments</h2>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="doctorAppointments"></tbody>
+                    </table>
+                </div>
+            </section>
+
         </div>
-        <div class="form-group" style="display: flex; align-items: flex-end;">
-          <button type="submit" class="btn">Log In</button>
-        </div>
-      </form>
-    </section>
 
-    <section class="summary-grid">
-      <div class="summary-card">
-        <h3>Total Appointments</h3>
-        <p id="docTotal">0</p>
-      </div>
-      <div class="summary-card">
-        <h3>Booked</h3>
-        <p id="docBooked">0</p>
-      </div>
-      <div class="summary-card">
-        <h3>Completed</h3>
-        <p id="docCompleted">0</p>
-      </div>
-    </section>
+    </main>
 
-    <section class="card">
-      <h2>Assigned Appointments</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Patient</th>
-              <th>Age / Gender</th>
-              <th>Phone</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="doctorAppointments"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+    <script src="script.js"></script>
 
-  <script src="script.js"></script>
 </body>
 </html>
