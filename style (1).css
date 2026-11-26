@@ -197,7 +197,7 @@ p {
     border: 1px solid #eee9f5;
     border-radius: 15px;
     background: #faf9fd;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .role-option:hover {
@@ -214,7 +214,7 @@ p {
 }
 
 .role-card {
-    transition: transform 0.25s ease;
+    transition: transform 0.3s ease;
 }
 
 .role-card:hover {
@@ -235,7 +235,7 @@ p {
     color: var(--white);
     font-size: 0.86rem;
     font-weight: 600;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .btn-primary-soft:hover,
@@ -622,7 +622,7 @@ label {
     border-radius: 18px;
     background: var(--surface);
     box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .doctor-card:hover {
@@ -697,7 +697,7 @@ label {
     color: #6f5b98;
     font-size: 0.8rem;
     font-weight: 600;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .slot-button:hover:not(:disabled) {
