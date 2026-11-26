@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Login | ClinicBook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="doctor-login.css">
+  <script src="login.js" defer></script>
+</head>
+<body>
+  <main class="login-page">
+    <a class="back-link" href="index.html">← Back to role selection</a>
+    <section class="login-card" aria-labelledby="page-title">
+      <div class="brand-mark" aria-hidden="true">+</div>
+      <p class="eyebrow">CLINICBOOK · DOCTOR PORTAL</p>
+      <h1 id="page-title">Welcome back, Doctor</h1>
+      <p class="intro">Sign in to manage your appointments and patient schedule.</p>
 
+      <form class="login-form" data-login-form data-role="doctor" data-redirect="doctor-dashboard.html" novalidate>
+        <label for="doctor-email">Email address</label>
+        <input id="doctor-email" name="email" type="email" placeholder="doctor@clinicbook.com" autocomplete="username" required>
+
+        <label for="doctor-password">Password</label>
+        <input id="doctor-password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+
+        <p class="form-message" data-form-message role="alert" aria-live="polite"></p>
+        <button class="submit-button" type="submit">Sign in to dashboard <span aria-hidden="true">→</span></button>
+      </form>
+
+      <p class="security-note">For authorised clinic staff only.</p>
+    </section>
+    <p class="footer-note">ClinicBook · Care, organised.</p>
+  </main>
+</body>
+</html>
