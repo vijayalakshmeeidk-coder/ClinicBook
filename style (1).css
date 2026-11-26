@@ -240,7 +240,7 @@ p {
 
 .btn-primary-soft:hover,
 .btn-primary-soft:focus-visible {
-    transform: translateY(-1px);
+    transform: translateY(-5px);
     border-color: #725d9e;
     background: #725d9e;
     color: var(--white);
@@ -373,7 +373,7 @@ p {
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(1px);
     }
 }
 
