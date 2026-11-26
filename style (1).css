@@ -383,6 +383,7 @@ p {
     border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(12px);
 }
 
 .welcome h1 {
@@ -468,6 +469,12 @@ p {
     color: #8e8490;
     font-size: 0.7rem;
 }
+.stat-card {
+    animation: rise 0.5s ease both;
+}
+.col-md-4:nth-child(1) .stat-card { animation-delay: 0.1s; }
+.col-md-4:nth-child(2) .stat-card { animation-delay: 0.2s; }
+.col-md-4:nth-child(3) .stat-card { animation-delay: 0.3s; }
 
 .blush {
     background: linear-gradient(135deg, #fffafd, #f8eaf0);
@@ -480,6 +487,7 @@ p {
 .lilac {
     background: linear-gradient(135deg, #fff, #f0ebf8);
 }
+
 
 /* ---------- Sections ---------- */
 
@@ -956,6 +964,7 @@ footer,
 
     .welcome {
         padding: 25px;
+        backdrop-filter: blur(12px);
     }
 
     .doctor-content-card {
