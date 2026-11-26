@@ -1,0 +1,175 @@
+/* ClinicBook staff login — standalone styles, does not modify style.css */
+:root {
+  --ink: #302b3d;
+  --muted: #817b8e;
+  --lavender: #8875b7;
+  --lavender-dark: #705d9f;
+  --pink: #ead9e5;
+  --line: #e9e4ef;
+  --surface: #ffffff;
+  --danger: #b34d68;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+  background:
+    radial-gradient(circle at 12% 15%, rgba(222, 204, 232, .75), transparent 32%),
+    radial-gradient(circle at 88% 82%, rgba(244, 216, 228, .75), transparent 30%),
+    #f7f4fa;
+}
+
+.login-page {
+  width: min(100% - 36px, 480px);
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 38px 0;
+}
+
+.back-link {
+  display: inline-block;
+  width: fit-content;
+  margin: 0 0 20px 4px;
+  color: var(--lavender-dark);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+.login-card {
+  padding: clamp(28px, 6vw, 46px);
+  background: var(--surface);
+  border: 1px solid rgba(226, 218, 236, .9);
+  border-radius: 24px;
+  box-shadow: 0 22px 60px rgba(68, 51, 91, .10);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  color: white;
+  background: linear-gradient(135deg, #a895ce, #d39ab9);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--lavender-dark);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+}
+
+h1 {
+  margin: 0;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(2rem, 6vw, 2.55rem);
+  font-weight: 400;
+  letter-spacing: -.025em;
+}
+
+.intro {
+  margin: 12px 0 30px;
+  color: var(--muted);
+  font-size: .96rem;
+  line-height: 1.65;
+}
+
+.login-form { display: flex; flex-direction: column; }
+
+.login-form label {
+  margin: 0 0 8px;
+  font-size: .86rem;
+  font-weight: 700;
+}
+
+.login-form input {
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 20px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  color: var(--ink);
+  background: #fdfcfe;
+  font: inherit;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.login-form input::placeholder { color: #aaa4b3; }
+
+.login-form input:focus {
+  border-color: #a18dc9;
+  box-shadow: 0 0 0 4px rgba(161, 141, 201, .15);
+}
+
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 52px;
+  margin-top: 3px;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(110deg, #8875b7, #a783b5);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 20px rgba(112, 93, 159, .22);
+}
+
+.submit-button:focus-visible, .back-link:focus-visible {
+  outline: 3px solid rgba(136, 117, 183, .35);
+  outline-offset: 3px;
+}
+
+.form-message {
+  min-height: 20px;
+  margin: -7px 0 12px;
+  color: var(--danger);
+  font-size: .83rem;
+}
+
+.security-note {
+  margin: 24px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid #f0edf3;
+  color: var(--muted);
+  font-size: .78rem;
+  text-align: center;
+}
+
+.footer-note {
+  margin: 22px 0 0;
+  color: #9690a0;
+  font-size: .78rem;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .login-page { width: min(100% - 24px, 480px); }
+  .login-card { border-radius: 20px; }
+}
