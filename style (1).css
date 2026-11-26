@@ -353,7 +353,7 @@ p {
 .container-main {
     width: min(100% - 40px, 1150px);
     margin: 0 auto;
-    padding: 35px 0;
+    padding: 40px 0;
 }
 
 .main-shell {
