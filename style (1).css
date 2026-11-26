@@ -382,7 +382,6 @@ p {
     padding: 28px 30px;
     border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--radius-lg);
-    background: linear-gradient(120deg, #d9c5ee, #f8dce7);
     box-shadow: var(--shadow-soft);
 }
 
