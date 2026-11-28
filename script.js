@@ -480,26 +480,29 @@ function saveDoctorLogin(event) {
   loadDoctorPage();
 }
 
+
 function loadDoctorPage() {
-    const activeDoctor = getLoggedInDoctor();
+  const activeDoctor = getLoggedInDoctor();
 
-    populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
+  populateDoctorLoginSelect(activeDoctor ? activeDoctor.id : "");
 
-    const nameEl = document.getElementById("doctorProfileName");
-    const specialtyEl = document.getElementById("doctorProfileSpecialty");
-    const hospitalEl = document.getElementById("doctorProfileHospital");
+  const nameEl = document.getElementById("doctorProfileName");
+  const specialtyEl = document.getElementById("doctorProfileSpecialty");
+  const hospitalEl = document.getElementById("doctorProfileHospital");
 
-    if (activeDoctor) {
-        nameEl.textContent = activeDoctor.name;
-        specialtyEl.textContent = activeDoctor.specialty;
-        hospitalEl.textContent = activeDoctor.hospital;
-    } else {
-        nameEl.textContent = "Not selected";
-        specialtyEl.textContent = "Not selected";
-        hospitalEl.textContent = "Not selected";
-    }
+  if (nameEl) {
+    nameEl.textContent = activeDoctor ? activeDoctor.name : "Not selected";
+  }
 
-    renderDoctorAppointments();
+  if (specialtyEl) {
+    specialtyEl.textContent = activeDoctor ? activeDoctor.specialty : "Not selected";
+  }
+
+  if (hospitalEl) {
+    hospitalEl.textContent = activeDoctor ? activeDoctor.hospital : "Not selected";
+  }
+
+  renderDoctorAppointments();
 }
 
 function renderDoctorAppointments() {
