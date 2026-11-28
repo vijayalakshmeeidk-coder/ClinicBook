@@ -138,7 +138,7 @@ function savePatientDetails(event) {
     showMessage("Patient details saved successfully.");
 }
 
-/* DOCTOR LIST */
+/* DOCTOR LST */
 function getLoggedInDoctor() {
   try {
     const raw = localStorage.getItem("clinicDoctor");
