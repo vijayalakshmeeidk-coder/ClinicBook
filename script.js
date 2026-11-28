@@ -59,10 +59,6 @@ function getDoctor(id) {
   return doctors.find((doc) => Number(doc.id) === Number(id)) || null;
 }
 
-function getLoggedInDoctor() {
-    return JSON.parse(localStorage.getItem("clinicDoctor")) || null;
-}
-
 function showMessage(message) {
     alert(message);
 }
@@ -147,13 +143,17 @@ function getLoggedInDoctor() {
   try {
     const raw = localStorage.getItem("clinicDoctor");
     const saved = raw ? JSON.parse(raw) : null;
-    if (saved && saved.id) {
-      return getDoctor(saved.id) || doctors[0];
+
+    if (!saved || !saved.id) {
+      return null;
     }
+
+    return getDoctor(saved.id) || null;
+
   } catch (err) {
-    console.warn("Invalid clinicDoctor data in localStorage:", err);
+    console.warn("Invalid doctor login data:", err);
+    return null;
   }
-  return doctors[0];
 }
 
 function populateDoctorLoginSelect() {
