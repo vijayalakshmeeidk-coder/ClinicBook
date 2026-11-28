@@ -1,9 +1,12 @@
-// staff login
+
+// Staff login
 (() => {
   const DEMO_ACCOUNTS = {
     doctor: {
       email: "doctor@clinicbook.com",
-      password: "doctor123"
+      password: "doctor123",
+      id: 1,
+      name: "Dr. Sharma"
     },
     receptionist: {
       email: "reception@clinicbook.com",
@@ -41,12 +44,17 @@
         return;
       }
 
-      // Demo-only session marker
       sessionStorage.setItem("clinicbookDemoRole", role);
       sessionStorage.setItem("clinicbookDemoEmail", email);
+
+      if (role === "doctor") {
+        localStorage.setItem(
+          "clinicDoctor",
+          JSON.stringify({ id: account.id })
+        );
+      }
 
       window.location.href = redirect;
     });
   });
-})
-  ();
+})();
